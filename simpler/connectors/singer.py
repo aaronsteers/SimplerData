@@ -1,4 +1,4 @@
-from simpler.connectors.base import Extractor, Loader
+from simpler.connectors._base import Extractor, Loader
 
 
 class SingerConfig(dict):

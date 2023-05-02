@@ -1,4 +1,4 @@
 from simpler.connectors import singer
-from simpler.connectors.base import Extractor, Loader, Source
+from simpler.connectors._base import Extractor, Loader, Source
 
 __all__ = ["Extractor", "Loader", "Source", "singer"]

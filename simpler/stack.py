@@ -5,7 +5,7 @@ from functools import cached_property
 from simpler.entities import DataEntity
 from simpler.naming import NamingConvention
 from simpler.tables import SourceTable
-from simpler.transforms.aggregate import AnalysisCalc
+from simpler.transforms._aggregate import AnalysisCalc
 from simpler.transforms.sql import SQLStageTransform, SQLTransformBase
 
 
