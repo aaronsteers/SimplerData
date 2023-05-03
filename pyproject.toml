@@ -4,7 +4,7 @@ version = "0.0.0"  # Dynamic versioning: https://pypi.org/project/poetry-dynamic
 description = "Everything should be a simpler as possible, and no simpler."
 authors = ["Aaron (\"AJ\") Steers"]
 readme = "README.md"
-packages = [{include = "simpler_data"}]
+packages = [{include = "simpler"}]
 
 [tool.poetry.dependencies]
 python = ">=3.10,<3.12"
