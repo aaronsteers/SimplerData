@@ -1096,7 +1096,7 @@ files = [
 
 [[package]]
 name = "simpler-data"
-version = "0.0.3.post4.dev0+9352840"
+version = "0.0.4"
 description = "Everything should be a simpler as possible, and no simpler."
 category = "main"
 optional = false

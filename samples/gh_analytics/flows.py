@@ -1,15 +1,18 @@
 """My publish workflows."""
 
 
+from simpler.connectors.singer import SingerTarget
 from simpler.flows import ELDataFlow
 from simpler.rules import SelectionRule
-from simpler.connectors.singer import SingerTarget
+
 
 class GitHubFlowTarget(SingerTarget):
     ...
 
+
 class SlackFlowTarget(SingerTarget):
     ...
+
 
 class GitHubReverseETL(ELDataFlow):
     """My publish workflow."""
