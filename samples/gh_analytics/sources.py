@@ -1,4 +1,4 @@
-from simpler.connectors.singer import SingerExtractor, SingerTap
+from simpler.connectors.singer import SingerConfig, SingerExtractor, SingerTap
 from simpler.interop.github import GitHubSingerTap, GitHubTapConfig
 
 from ...simpler import (
@@ -21,6 +21,10 @@ class GitHubSource(GitHubSingerTap):
     config = GitHubTapConfig(
         # TODO: Add GitHub tap config
     )
+
+
+class JaffleShopTapConfig(SingerConfig):
+    """Jaffle Shop tap config."""
 
 
 class JaffleShopSource(SingerTap):

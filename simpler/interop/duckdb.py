@@ -39,9 +39,9 @@ class DuckDBDatabase(DuckDBDatastore):
         self.path = path
 
     @cached_property()
-    def loader(self) -> SingerLoader:
+    def loader(self) -> SingerTarget:
         """Get a loader for this database."""
-        return SingerLoader(self.path)
+        return SingerTarget(self.path)
 
     def get_schema(self, schema_name: str) -> DuckDBDatastore:
         """Get a schema in this database by name."""

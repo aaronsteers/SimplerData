@@ -23,4 +23,4 @@ class Source(metaclass=abc.ABCMeta):
     loader: Loader
     discover_datasets: bool
     extractor: Extractor
-    ingest_rules: Iterable[SelectionRule]
+    ingest_rules: t.Iterable[SelectionRule]
