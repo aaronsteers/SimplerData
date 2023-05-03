@@ -1,14 +1,23 @@
 [tool.poetry]
-name = "github analytics (simpler)"
+name = "Simpler GitHub Analytics"
 version = "0.0.0"
-description = ""
+description = "A custom GitHub analytics stack using Simpler."
 authors = ["Aaron (\"AJ\") Steers"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "^3.10"
+python = ">=3.10,<3.12"
+simpler-data = { path = "../..", develop = true }
 
+[tool.poetry.group.dev.dependencies]
+pytest = "^7.3.1"
+isort = "^5.12.0"
+black = "^23.3.0"
+ruff = "^0.0.264"
+
+[tool.poetry-dynamic-versioning]
+enable = true
 
 [build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
+requires = ["poetry-core>=1.0.0", "poetry-dynamic-versioning"]
+build-backend = "poetry_dynamic_versioning.backend"

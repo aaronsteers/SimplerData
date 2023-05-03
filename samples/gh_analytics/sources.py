@@ -1,11 +1,10 @@
-from simpler.connectors.singer import SingerConfig, SingerExtractor, SingerTap
-from simpler.interop.github import GitHubSingerTap, GitHubTapConfig
-
-from ...simpler import (
+from simpler import (
     CustomInlineTransform,
     MD5Transform,
     SelectionRule,
 )
+from simpler.connectors.singer import SingerConfig, SingerTap
+from simpler.interop.github import GitHubSingerTap, GitHubTapConfig
 
 
 class GitHubSource(GitHubSingerTap):
@@ -14,7 +13,7 @@ class GitHubSource(GitHubSingerTap):
     ingest_rules = [
         SelectionRule("*.*"),
         CustomInlineTransform(
-            condition=lambda x: x.property.name.contains("email"),
+            selection=SelectionRule("*.*email*"),
             transform=MD5Transform,
         ),
     ]
@@ -32,9 +31,10 @@ class JaffleShopSource(SingerTap):
 
     name = "Jaffle Shop"
     discover_datasets = True
-    extractor = SingerExtractor(
-        tap="tap-jaffle-shop",
-        config={"years": 1},
+    extractor = SingerTap(
+        name="tap-jaffle-shop",
+        pip_url="tap-jaffle-shop",
+        config=SingerConfig(years=1),
     )
     ingest_rules = [
         SelectionRule("*.*"),

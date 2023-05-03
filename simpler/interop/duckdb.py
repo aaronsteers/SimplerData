@@ -1,5 +1,5 @@
+import typing as t  # noqa
 from functools import cached_property
-from typing import t  # noqa
 
 from simpler.connectors.singer import SingerConfig, SingerTarget
 from simpler.stores import DatastoreBase
@@ -20,12 +20,12 @@ class DuckDBDatastore(DatastoreBase):
 
     def __init__(self, db_name: str | None, schema_name: str | None, path: str | None):
         """Initialize the DuckDB datastore."""
-        super().__init__()
+        # super().__init__()
         self.db_name = db_name
         self.schema_name = schema_name
         self.path = path
 
-    @cached_property()
+    @cached_property
     def loader(self) -> DuckDBSingerTarget:
         return DuckDBSingerTarget(self.path)
 
@@ -38,7 +38,7 @@ class DuckDBDatabase(DuckDBDatastore):
         super().__init__()
         self.path = path
 
-    @cached_property()
+    @cached_property
     def loader(self) -> SingerTarget:
         """Get a loader for this database."""
         return SingerTarget(self.path)

@@ -24,3 +24,9 @@ class Source(metaclass=abc.ABCMeta):
     discover_datasets: bool
     extractor: Extractor
     ingest_rules: t.Iterable[SelectionRule]
+
+
+class ConnectorConfig:
+    """Connector config."""
+
+    config: dict

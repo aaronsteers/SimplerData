@@ -1,10 +1,10 @@
 import abc
-from typing import t  # noqa
+import typing as t  # noqa
 
 from simpler.connectors import Extractor, Loader
 
 
-class SQLEngine(abc.Meta):
+class SQLEngine(metaclass=abc.ABCMeta):
     """Base class for SQL engines."""
 
     @abc.abstractmethod
@@ -13,7 +13,7 @@ class SQLEngine(abc.Meta):
         pass
 
 
-class DatastoreBase(abc.ABCMeta):
+class DatastoreBase(metaclass=abc.ABCMeta):
     """Base class for writeable data repositories or "data stores"."""
 
     loader: Loader

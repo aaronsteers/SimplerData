@@ -1,7 +1,8 @@
-from ...simpler import (
+from simpler import (
     DataEntity,
     Table,
 )
+
 from .sources import JaffleShopSource
 
 

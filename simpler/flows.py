@@ -1,4 +1,4 @@
-from typing import t
+import typing as t
 
 from simpler.connectors import Extractor, Loader
 from simpler.rules import SelectionRule

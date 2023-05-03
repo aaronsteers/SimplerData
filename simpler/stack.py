@@ -55,3 +55,20 @@ class DataStack(metaclass=abc.ABCMeta):
         """SQL transforms for this data stack."""
         for _, entity in self.entities.items():
             yield from entity.sql_transforms
+
+    # Actions
+
+    def compile(self) -> None:
+        """Compile the data stack."""
+        for entity in self.entities.values():
+            entity.compile()
+
+    def build(self) -> None:
+        """Build the data stack."""
+        for entity in self.entities.values():
+            entity.build()
+
+    def publish(self) -> None:
+        """Publish the data stack."""
+        for entity in self.entities.values():
+            entity.publish()
