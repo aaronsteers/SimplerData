@@ -5,10 +5,8 @@ from simpler.interop.duckdb import DuckDBDatastore
 from simpler.naming import SnakeCase
 from simpler.stack import DataStack
 
-from .sources import (
-    GitHubSource,
-    JaffleShopSource,
-)
+from .sources.github import GitHubSource
+from .sources.jaffle_shop import JaffleShopSource
 
 WAREHOUSE_DB_PATH = "./db.duckdb"
 

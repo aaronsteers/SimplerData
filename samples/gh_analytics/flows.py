@@ -1,20 +1,24 @@
 """My publish workflows."""
 
 
-from simpler.connectors.singer import SingerTarget
-from simpler.flows import ELDataFlow
+from simpler.connectors.singer import CustomSingerConfig, SingerTarget
+from simpler.flows import ReverseELFlow
 from simpler.rules import SelectionRule
 
 
 class GitHubFlowTarget(SingerTarget):
-    ...
+    name = "target-github"
+    pip_url = "target-github"
+    config = CustomSingerConfig({})
 
 
 class SlackFlowTarget(SingerTarget):
-    ...
+    name = "target-apprise"
+    pip_url = "target-apprise"
+    config = CustomSingerConfig({})
 
 
-class GitHubReverseETL(ELDataFlow):
+class GitHubReverseETL(ReverseELFlow):
     """My publish workflow."""
 
     name = "AJ's GitHub Push"
@@ -25,7 +29,7 @@ class GitHubReverseETL(ELDataFlow):
     loader = GitHubFlowTarget()
 
 
-class SlackReverseETL(ELDataFlow):
+class SlackReverseETL(ReverseELFlow):
     """My publish workflow."""
 
     name = "AJ's Slack Push"

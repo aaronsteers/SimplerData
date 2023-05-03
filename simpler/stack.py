@@ -2,8 +2,11 @@ import abc
 import typing as t
 from functools import cached_property
 
+from simpler.connectors import Extractor, Source
 from simpler.entities import DataEntity
+from simpler.flows import ELDataFlow
 from simpler.naming import NamingConvention
+from simpler.stores import DatastoreBase
 from simpler.tables import SourceTable
 from simpler.transforms._aggregate import AnalysisCalc
 from simpler.transforms.sql import SQLStageTransform, SQLTransformBase
@@ -16,6 +19,17 @@ class DataStack(metaclass=abc.ABCMeta):
     naming_convention: NamingConvention
     sql_staging_transforms: t.Iterable[SQLTransformBase]
     sql_transforms: t.Iterable[SQLTransformBase]
+
+    # Data sources:
+    sources: t.Iterable[Source]
+
+    # 3 Stages of the DW: "raw", "internal", and "output"
+    raw_datastore: DatastoreBase
+    internal_datastore: DatastoreBase
+    output_datastore: DatastoreBase
+
+    # Reverse ETL flows that should run after the DW is ready.
+    publish_flows = t.Iterable[ELDataFlow]
 
     @cached_property
     def source_tables(self) -> t.Iterable[SourceTable]:
@@ -55,6 +69,12 @@ class DataStack(metaclass=abc.ABCMeta):
         """SQL transforms for this data stack."""
         for _, entity in self.entities.items():
             yield from entity.sql_transforms
+
+    # Reverse EL
+
+    def as_extractor(self) -> Extractor:
+        """Return this data stack as an extractor."""
+        return Extractor(self)
 
     # Actions
 
