@@ -18,7 +18,7 @@ class SlackFlowTarget(SingerTarget):
     config = CustomSingerConfig({})
 
 
-class GitHubReverseETL(ReverseELFlow):
+class GitHubReverseEL(ReverseELFlow):
     """My publish workflow."""
 
     name = "AJ's GitHub Push"
@@ -29,7 +29,7 @@ class GitHubReverseETL(ReverseELFlow):
     loader = GitHubFlowTarget()
 
 
-class SlackReverseETL(ReverseELFlow):
+class SlackReverseEL(ReverseELFlow):
     """My publish workflow."""
 
     name = "AJ's Slack Push"

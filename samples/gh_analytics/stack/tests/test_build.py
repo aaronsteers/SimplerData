@@ -1,4 +1,4 @@
-from samples.gh_analytics.stack import GitHubStack
+from samples.gh_analytics.src.stack import GitHubStack
 
 
 def test_compile():

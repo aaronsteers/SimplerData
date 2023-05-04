@@ -2,13 +2,13 @@ import abc
 import typing as t
 from functools import cached_property
 
+from simpler.calculations import AnalysisCalc
 from simpler.connectors import Extractor, Source
 from simpler.entities import DataEntity
 from simpler.flows import ELDataFlow
 from simpler.naming import NamingConvention
 from simpler.stores import DatastoreBase
 from simpler.tables import SourceTable
-from simpler.transforms._aggregate import AnalysisCalc
 from simpler.transforms.sql import SQLStageTransform, SQLTransformBase
 
 
@@ -28,8 +28,8 @@ class DataStack(metaclass=abc.ABCMeta):
     internal_datastore: DatastoreBase
     output_datastore: DatastoreBase
 
-    # Reverse ETL flows that should run after the DW is ready.
-    publish_flows = t.Iterable[ELDataFlow]
+    # Reverse EL flows that should run after the DW is ready.
+    output_flows = t.Iterable[ELDataFlow]
 
     @cached_property
     def source_tables(self) -> t.Iterable[SourceTable]:
@@ -78,15 +78,29 @@ class DataStack(metaclass=abc.ABCMeta):
 
     # Actions
 
+    @property
+    def aspects(self) -> dict:
+        """Aspects of this data stack."""
+        return {
+            "name": self.name,
+            "naming_convention": self.naming_convention,
+            "sql_staging_transforms": self.sql_staging_transforms,
+            "sql_transforms": self.sql_transforms,
+            "sources": self.sources,
+            "storage_scheme": self.storage_scheme,
+            "output_flows": self.output_flows,
+        }
+
     def compile(self) -> None:
         """Compile the data stack."""
         for entity in self.entities.values():
             entity.compile()
 
-    def build(self) -> None:
+    @classmethod
+    def build(cls) -> None:
         """Build the data stack."""
-        for entity in self.entities.values():
-            entity.build()
+        stack = cls()
+        print(repr(stack.aspects))
 
     def publish(self) -> None:
         """Publish the data stack."""

@@ -5,6 +5,11 @@ from functools import cache, cached_property
 class SelectionRule:
     """A selection rule."""
 
+    pattern: str
+
+    class Config:
+        arbitrary_types_allowed = True
+
     def __init__(self, /, pattern: str):
         """Initialize the selection rule."""
         self.pattern = pattern
@@ -24,12 +29,10 @@ class SelectionRule:
             return self.pattern.split(".")[:-1]
         return "*"
 
-    @cache
     def check_dataset(self, /, name: str) -> bool:
         """Use glob rules to match pattern against the given name."""
         return fnmatch.fnmatch(name, self.pattern)
 
-    @cache
     def check_dataset_property(self, /, name: str) -> bool:
         """Use glob rules to match pattern against the given name."""
         return fnmatch.fnmatch(name, self.pattern)

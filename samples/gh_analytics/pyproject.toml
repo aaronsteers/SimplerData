@@ -4,6 +4,7 @@ version = "0.0.0"
 description = "A custom GitHub analytics stack using Simpler."
 authors = ["Aaron (\"AJ\") Steers"]
 readme = "README.md"
+packages = [{include = "stack"}]
 
 [tool.poetry.dependencies]
 python = ">=3.10,<3.12"
@@ -21,3 +22,7 @@ enable = true
 [build-system]
 requires = ["poetry-core>=1.0.0", "poetry-dynamic-versioning"]
 build-backend = "poetry_dynamic_versioning.backend"
+
+# Define a script to run the app
+[tool.poetry.scripts]
+build = "stack.stack:GitHubStack.build"
