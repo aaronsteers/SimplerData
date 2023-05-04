@@ -25,4 +25,5 @@ build-backend = "poetry_dynamic_versioning.backend"
 
 # Define a script to run the app
 [tool.poetry.scripts]
-build = "stack.stack:GitHubStack.build"
+load = "stack.stack:GitHubStack.init_and_load"
+compile = "stack.stack:GitHubStack.init_and_compile"

@@ -1,16 +1,29 @@
 import abc
 import typing as t
 
+from pydantic import BaseModel
+
 from simpler.connectors import Extractor, Loader
 from simpler.rules import SelectionRule
 from simpler.transforms.inline import InlineTransform
 
 
-class ELDataFlow(metaclass=abc.ABCMeta):
-    extractor: Extractor
-    loader: Loader
-    rules: t.Iterable[SelectionRule]
-    transforms: t.Iterable[InlineTransform]
+class ELDataFlow(BaseModel, metaclass=abc.ABCMeta):
+    extractor: Extractor | None
+    loader: Loader | None
+    rules: t.Iterable[SelectionRule] = []
+    transforms: t.Iterable[InlineTransform] = []
+
+    class Config:
+        arbitrary_types_allowed = True
+
+    def run(self, **kwargs) -> None:
+        """Run the data flow."""
+        print(
+            f"Emulating sync from extractor '{self.extractor.name}' "
+            f"to '{self.loader.name}'."
+        )
+        # raise NotImplementedError
 
 
 class CustomELFlow(ELDataFlow):
@@ -34,11 +47,9 @@ class ReverseELFlow(ELDataFlow):
 
     def __init__(
         self,
-        loader: Loader | None = None,
-        rules: t.Iterable[SelectionRule] | None = None,
-        transforms: t.Iterable[InlineTransform] | None = None,
+        **kwargs,
     ):
-        self.extractor = None  # The DW is the extraction sources.
-        self.loader = loader or self.__class__.loader
-        self.rules = rules or self.__class__.rules or []
-        self.transforms = transforms or []
+        super().__init__(
+            extractor=None,
+            **kwargs,
+        )

@@ -24,6 +24,6 @@ class GitHubStack(stack.DataStack):
 
     # Reverse EL flows that should run after the DW is ready.
     output_flows = [
-        reverse_el.GitHubReverseEL(),
-        reverse_el.SlackReverseEL(),
+        reverse_el.github_push,
+        reverse_el.slack_push,
     ]

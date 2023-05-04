@@ -3,7 +3,7 @@ import typing as t
 from functools import cached_property
 
 from simpler.calculations import AnalysisCalc
-from simpler.connectors import Extractor, Source
+from simpler.connectors import Extractor, Loader, Source
 from simpler.entities import DataEntity
 from simpler.flows import ELDataFlow
 from simpler.naming import NamingConvention
@@ -70,6 +70,10 @@ class DataStack(metaclass=abc.ABCMeta):
         for _, entity in self.entities.items():
             yield from entity.sql_transforms
 
+    def as_raw_loader(self) -> Loader:
+        """Return this data stack as a loader for raw data."""
+        return self.storage_scheme.raw.loader
+
     # Reverse EL
 
     def as_extractor(self) -> Extractor:
@@ -96,13 +100,23 @@ class DataStack(metaclass=abc.ABCMeta):
         for entity in self.entities.values():
             entity.compile()
 
-    @classmethod
-    def build(cls) -> None:
-        """Build the data stack."""
-        stack = cls()
-        print(repr(stack.aspects))
-
     def publish(self) -> None:
         """Publish the data stack."""
         for entity in self.entities.values():
             entity.publish()
+
+    @classmethod
+    def init_and_compile(cls) -> None:
+        """Compile the data stack."""
+        stack = cls()
+        print(repr(stack.aspects))
+
+    @classmethod
+    def init_and_load(cls) -> None:
+        stack = cls()
+        for source in stack.sources:
+            el_flow = ELDataFlow(
+                extractor=source,
+                loader=stack.as_raw_loader(),
+            )
+            el_flow.run()
