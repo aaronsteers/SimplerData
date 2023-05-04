@@ -17,7 +17,7 @@ class GitHubReverseEL(ReverseELFlow):
     loader = SingerTarget(
         name="target-github",
         pip_url="target-github",
-        config=CustomSingerConfig({}),
+        config=CustomSingerConfig(config={}),
     )
 
 
@@ -32,5 +32,5 @@ class SlackReverseEL(ReverseELFlow):
     loader = SingerTarget(
         name="target-apprise",
         pip_url="target-apprise",
-        config=CustomSingerConfig({}),
+        config=CustomSingerConfig(config={}),
     )

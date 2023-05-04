@@ -1,4 +1,4 @@
-from pydantic import BaseModel, Extra, validator
+from pydantic import BaseModel, Extra
 
 from simpler.connectors._base import ConnectorConfig, Extractor, Loader
 
@@ -14,9 +14,6 @@ class CustomSingerConfig(ConnectorConfig):
     """A JSON Schema config."""
 
     config: dict
-
-    def __init__(self, config: dict):
-        self.config = config
 
 
 class SingerConnector:
