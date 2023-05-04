@@ -6,18 +6,6 @@ from simpler.flows import ReverseELFlow
 from simpler.rules import SelectionRule
 
 
-class GitHubFlowTarget(SingerTarget):
-    name = "target-github"
-    pip_url = "target-github"
-    config = CustomSingerConfig({})
-
-
-class SlackFlowTarget(SingerTarget):
-    name = "target-apprise"
-    pip_url = "target-apprise"
-    config = CustomSingerConfig({})
-
-
 class GitHubReverseEL(ReverseELFlow):
     """My publish workflow."""
 
@@ -26,7 +14,11 @@ class GitHubReverseEL(ReverseELFlow):
         # Use the full `flowto_github_notifications` table as source data.
         SelectionRule("flowto_github_notifications.*")
     ]
-    loader = GitHubFlowTarget()
+    loader = SingerTarget(
+        name="target-github",
+        pip_url="target-github",
+        config=CustomSingerConfig({}),
+    )
 
 
 class SlackReverseEL(ReverseELFlow):
@@ -37,4 +29,8 @@ class SlackReverseEL(ReverseELFlow):
         # Use the full `flowto_slack_notifications` table as source data.
         SelectionRule("flowto_slack_notifications.*")
     ]
-    loader = SlackFlowTarget()
+    loader = SingerTarget(
+        name="target-apprise",
+        pip_url="target-apprise",
+        config=CustomSingerConfig({}),
+    )
