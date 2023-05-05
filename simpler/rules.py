@@ -1,5 +1,5 @@
 import fnmatch
-from functools import cache, cached_property
+from functools import cached_property
 
 
 class SelectionRule:
