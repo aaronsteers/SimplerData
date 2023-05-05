@@ -6,16 +6,23 @@ from pydantic import BaseModel
 from simpler.rules import SelectionRule
 
 
-class Extractor(BaseModel, metaclass=abc.ABCMeta):
-    """Base class for extractors."""
+class Connector(BaseModel, metaclass=abc.ABCMeta):
+    """Base class for connectors."""
 
     name: str
+
+    @abc.abstractmethod
+    def ensure_installed(self):
+        """Ensure that the connector is installed."""
+        raise NotImplementedError
+
+
+class Extractor(BaseModel, metaclass=abc.ABCMeta):
+    """Base class for extractors."""
 
 
 class Loader(BaseModel, metaclass=abc.ABCMeta):
     """Base class for loaders."""
-
-    name: str
 
 
 class Source(BaseModel, metaclass=abc.ABCMeta):

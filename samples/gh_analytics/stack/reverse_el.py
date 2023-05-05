@@ -1,7 +1,7 @@
 """My publish workflows."""
 
 
-from simpler.connectors.singer import CustomSingerConfig, SingerTarget
+from simpler.connectors.singer import CustomSingerConfig, PythonExecutable, SingerTarget
 from simpler.flows import ReverseELFlow
 from simpler.rules import SelectionRule
 
@@ -13,8 +13,11 @@ github_push = ReverseELFlow(
     ],
     loader=SingerTarget(
         name="target-github",
-        pip_url="target-github",
         config=CustomSingerConfig(config={}),
+        executable=PythonExecutable(
+            pip_urls=["target-github"],
+            executable="target-github",
+        ),
     ),
 )
 
@@ -26,7 +29,10 @@ slack_push = ReverseELFlow(
     ],
     loader=SingerTarget(
         name="target-apprise",
-        pip_url="target-apprise",
         config=CustomSingerConfig(config={}),
+        executable=PythonExecutable(
+            pip_urls=["target-apprise"],
+            executable="target-apprise",
+        ),
     ),
 )

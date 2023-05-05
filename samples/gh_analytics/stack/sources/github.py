@@ -7,7 +7,7 @@ from simpler.interop.github import GitHubSingerTap, GitHubTapConfig
 
 
 class GitHubSource(GitHubSingerTap):
-    name = "GitHub"
+    name = "GitHub Tap"
     discover_datasets = True
     ingest_rules = [
         SelectionRule("*.*"),

@@ -1,8 +1,7 @@
 import typing as t  # noqa
 
-from simpler.connectors.singer import SingerConfig, SingerTarget
+from simpler.connectors.singer import SingerConfig, SingerTarget, PythonExecutable
 from simpler.stores import DatastoreBase, DWStorageScheme
-from pydantic import validator
 
 
 class DuckDBSingerConfig(SingerConfig):
@@ -14,6 +13,10 @@ class DuckDBSingerTarget(SingerTarget):
 
     name = "target-duckdb"
     config: DuckDBSingerConfig
+    executable = PythonExecutable(
+        pip_urls=["target-apprise"],
+        executable="target-apprise",
+    )
 
 
 class DuckDBDatastore(DatastoreBase):

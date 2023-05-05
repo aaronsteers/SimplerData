@@ -1,4 +1,4 @@
-from simpler.connectors.singer import SingerConfig, SingerTap
+from simpler.connectors.singer import PythonExecutable, SingerConfig, SingerTap
 
 
 class GitHubTapConfig(SingerConfig):
@@ -10,3 +10,8 @@ class GitHubSingerTap(SingerTap):
 
     tap_name = "tap-github"
     config: GitHubTapConfig
+    executable = PythonExecutable(
+        executable="tap-github",
+        pip_urls=["tap-github"],
+        # interpreter=PythonInterpreter.PYTHON_3_9,
+    )

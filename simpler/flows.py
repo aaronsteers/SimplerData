@@ -17,8 +17,18 @@ class ELDataFlow(BaseModel, metaclass=abc.ABCMeta):
     class Config:
         arbitrary_types_allowed = True
 
+    def ensure_installed(self):
+        for connector in (self.extractor, self.loader):
+            if connector.executable is None:
+                raise ValueError(
+                    f"Connector executable for '{connector.name}' is None."
+                )
+            # if connector is not None and connector.executable is not None:
+            connector.executable.ensure_installed()
+
     def run(self, **kwargs) -> None:
         """Run the data flow."""
+        self.ensure_installed()
         print(
             f"Emulating sync from extractor '{self.extractor.name}' "
             f"to '{self.loader.name}'."
