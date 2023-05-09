@@ -1,18 +1,16 @@
 """Meltano interop."""
 
 import typing as t
-from enum import Enum
 from pathlib import Path
 
 from pydantic import BaseModel
 from runnow import run
 
 from simpler import yaml
-from simpler.connectors import Extractor, Loader, Source
-from simpler.connectors.singer import PythonExecutable, SingerTap, SingerTarget
+from simpler.connectors.singer import SingerTap, SingerTarget
 from simpler.flows import ReverseELFlow
-from simpler.stores import DatastoreBase, DWStorageScheme
-from simpler.tools import ToolType
+from simpler.stores import DWStorageScheme
+from simpler.tools import PythonExecutable, ToolType
 
 
 class MeltanoCommand(BaseModel):

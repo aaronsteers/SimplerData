@@ -3,7 +3,6 @@ from simpler import (
     MD5Transform,
     SelectionRule,
 )
-from simpler.connectors import Source
 from simpler.interop.github import GitHubSingerTap, GitHubTapConfig
 
 
