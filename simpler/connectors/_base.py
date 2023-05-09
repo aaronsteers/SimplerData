@@ -3,26 +3,26 @@ import typing as t
 
 from pydantic import BaseModel
 
+from simpler.entities import DataEntity
 from simpler.rules import SelectionRule
+from simpler.tools import Tool, ToolType
 
 
-class Connector(BaseModel, metaclass=abc.ABCMeta):
+class Connector(Tool, metaclass=abc.ABCMeta):
     """Base class for connectors."""
 
-    name: str
 
-    @abc.abstractmethod
-    def ensure_installed(self):
-        """Ensure that the connector is installed."""
-        raise NotImplementedError
-
-
-class Extractor(BaseModel, metaclass=abc.ABCMeta):
+class Extractor(Connector, metaclass=abc.ABCMeta):
     """Base class for extractors."""
 
+    type = ToolType.EXTRACTOR
 
-class Loader(BaseModel, metaclass=abc.ABCMeta):
+
+class Loader(Connector, metaclass=abc.ABCMeta):
     """Base class for loaders."""
+
+    type = ToolType.LOADER
+    extractor: Extractor | None = None
 
 
 class Source(BaseModel, metaclass=abc.ABCMeta):
@@ -32,13 +32,7 @@ class Source(BaseModel, metaclass=abc.ABCMeta):
         arbitrary_types_allowed = True
 
     name: str
-    loader: Loader
-    discover_datasets: bool
-    extractor: Extractor
-    ingest_rules: t.Iterable[SelectionRule]
-
-
-class ConnectorConfig(BaseModel):
-    """Connector config."""
-
-    config: dict
+    discover_datasets: bool = True
+    ingest_rules: list[SelectionRule]
+    entities: t.Iterable[DataEntity] = []
+    extractor: Extractor | None = None
