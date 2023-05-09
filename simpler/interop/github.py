@@ -8,8 +8,8 @@ class GitHubTapConfig(SingerConfig):
 class GitHubSingerTap(SingerTap):
     """GitHub tap."""
 
-    tap_name = "tap-github"
-    config: GitHubTapConfig
+    name = "tap-github"
+    config: GitHubTapConfig = GitHubTapConfig()
     executable = PythonExecutable(
         executable="tap-github",
         pip_urls=["tap-github"],
