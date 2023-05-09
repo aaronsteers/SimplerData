@@ -27,3 +27,4 @@ build-backend = "poetry_dynamic_versioning.backend"
 [tool.poetry.scripts]
 load = "stack.stack:GitHubStack.init_and_load"
 compile = "stack.stack:GitHubStack.init_and_compile"
+build_meltano = "stack.stack:GitHubStack.init_and_build_meltano"

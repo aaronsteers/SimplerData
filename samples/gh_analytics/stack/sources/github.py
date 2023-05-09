@@ -3,6 +3,7 @@ from simpler import (
     MD5Transform,
     SelectionRule,
 )
+from simpler.connectors import Source
 from simpler.interop.github import GitHubSingerTap, GitHubTapConfig
 
 
@@ -19,3 +20,4 @@ class GitHubSource(GitHubSingerTap):
     config = GitHubTapConfig(
         # TODO: Add GitHub tap config
     )
+    extractor = GitHubSingerTap()
