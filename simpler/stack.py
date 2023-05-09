@@ -6,8 +6,9 @@ from simpler.calculations import AnalysisCalc
 from simpler.connectors import Extractor, Loader, Source
 from simpler.entities import DataEntity
 from simpler.flows import ELDataFlow
+from simpler.interop.meltano import MeltanoBuilder
 from simpler.naming import NamingConvention
-from simpler.stores import DatastoreBase
+from simpler.stores import DWStorageScheme
 from simpler.tables import SourceTable
 from simpler.transforms.sql import SQLStageTransform, SQLTransformBase
 
@@ -24,9 +25,7 @@ class DataStack(metaclass=abc.ABCMeta):
     sources: t.Iterable[Source]
 
     # 3 Stages of the DW: "raw", "internal", and "output"
-    raw_datastore: DatastoreBase
-    internal_datastore: DatastoreBase
-    output_datastore: DatastoreBase
+    storage_scheme: DWStorageScheme
 
     # Reverse EL flows that should run after the DW is ready.
     output_flows = t.Iterable[ELDataFlow]
@@ -74,6 +73,20 @@ class DataStack(metaclass=abc.ABCMeta):
         """Return this data stack as a loader for raw data."""
         return self.storage_scheme.raw.loader
 
+    # Build to common Open Source Tools
+    def build_meltano(self, path: str = "./.meltano") -> None:
+        """Build a Meltano project for this data stack."""
+        self.build_dbt(path=path)
+        meltano_builder = MeltanoBuilder(
+            sources=[source.extractor for source in self.sources],
+            storage_scheme=self.storage_scheme,
+        )
+        meltano_builder.build(path=path)
+
+    def build_dbt(self, path: str = "./.dbt") -> None:
+        """Build a dbt project for this data stack."""
+        pass
+
     # Reverse EL
 
     def as_extractor(self) -> Extractor:
@@ -104,6 +117,13 @@ class DataStack(metaclass=abc.ABCMeta):
         """Publish the data stack."""
         for entity in self.entities.values():
             entity.publish()
+
+    @classmethod
+    def init_and_build_meltano(cls) -> None:
+        """Build a Meltano project for this data stack."""
+        stack = cls()
+        stack.compile()
+        stack.build_meltano(path="./.meltano")
 
     @classmethod
     def init_and_compile(cls) -> None:

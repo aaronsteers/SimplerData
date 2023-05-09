@@ -1,7 +1,7 @@
 import abc
 import typing as t
 
-from simpler.connectors import Source
+from simpler.connectors._base import Source
 from simpler.properties import DataProperty
 
 
