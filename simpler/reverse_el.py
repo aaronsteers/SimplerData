@@ -1,4 +1,3 @@
-import typing as t
 
 from simpler.connectors import Loader
 from simpler.flows import ELDataFlow
@@ -14,8 +13,8 @@ class ReverseELFlow(ELDataFlow):
         self,
         source_stack: DataStack,
         loader: Loader | None,
-        rules: t.Iterable[SelectionRule] | None = None,
-        transforms: t.Iterable[InlineTransform] | None = None,
+        rules: list[SelectionRule] | None = None,
+        transforms: list[InlineTransform] | None = None,
     ):
         self.extractor = source_stack.as_extractor()
         self.loader = loader

@@ -1,5 +1,5 @@
 import abc
-from enum import Enum, auto
+from enum import Enum
 from pathlib import Path
 from venv import EnvBuilder
 
@@ -7,7 +7,7 @@ from pydantic import BaseModel
 from runnow import run
 
 
-class ToolType(Enum):
+class ToolType(str, Enum):
     """Tool type."""
 
     EXTRACTOR = "extractor"
@@ -73,10 +73,10 @@ class PreinstalledExecutable(ExecutableBase):
         print(f"Skipping installation of '{self.executable}'. (Already installed.)")
 
 
-class PythonInstallMethod(Enum):
+class PythonInstallMethod(str, Enum):
     """A Python install method."""
 
-    AUTO = auto()
+    AUTO = "auto"
     PYZ = "pyz"
     VENV = "venv"
 
@@ -175,8 +175,8 @@ class Tool(BaseModel):
     """Base class for tools."""
 
     name: str
-    executable: ExecutableBase
     type: ToolType
+    executable: ExecutableBase | None = None
     home_dir: str | Path | None = None
     config: ToolConfig | None = None
 

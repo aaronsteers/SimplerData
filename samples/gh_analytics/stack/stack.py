@@ -1,5 +1,5 @@
-from simpler import naming, stack
-from simpler.interop import duckdb
+from simpler import ELDataFlow, Source, naming, stack
+from simpler.interop import duckdb, meltano
 
 from . import reverse_el
 from .sources import github, jaffle_shop
@@ -13,11 +13,11 @@ class GitHubStack(stack.DataStack):
     name = "AJ's Data Stack"
     storage_scheme = duckdb.DuckDBDWStorageScheme(path=WAREHOUSE_DB_PATH)
     naming_convention = naming.SnakeCase()
-    sources = [
+    sources: list[Source] = [
         github.GitHubSource(),
         jaffle_shop.JaffleShopSource(),
     ]
-    output_flows = [
+    output_flows: list[ELDataFlow] = [
         reverse_el.github_push,
         reverse_el.slack_push,
     ]
@@ -35,3 +35,7 @@ class GitHubTestStack(GitHubStack):
             years=3,
         ),
     ]
+
+
+class GitHubStackBuilder(meltano.MeltanoBuilder):
+    stack = GitHubStack()

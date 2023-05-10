@@ -1,9 +1,11 @@
 import abc
 
+from pydantic import BaseModel
+
 from simpler.tables import SourceTable, Table
 
 
-class SQLTransformBase(metaclass=abc.ABCMeta):
+class SQLTransformBase(BaseModel, metaclass=abc.ABCMeta):
     """A SQL transform."""
 
     input_tables: list[Table]

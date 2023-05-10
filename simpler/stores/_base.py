@@ -26,12 +26,12 @@ class DatastoreBase(BaseModel, metaclass=abc.ABCMeta):
     sql_engine: SQLEngine | None
 
 
-class StorageSchemeBase(BaseModel, metaclass=abc.ABCMeta):
+class StorageScheme(BaseModel, metaclass=abc.ABCMeta):
     raw: DatastoreBase
     output: DatastoreBase
 
 
-class DWStorageScheme(StorageSchemeBase):
+class DWStorageScheme(StorageScheme):
     """A storage scheme for a data warehouse."""
 
     raw: DatastoreBase

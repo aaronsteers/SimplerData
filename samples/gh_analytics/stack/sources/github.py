@@ -1,20 +1,19 @@
 from simpler import (
-    CustomInlineTransform,
-    MD5Transform,
     SelectionRule,
 )
+from simpler.connectors import Source
 from simpler.interop.github import GitHubSingerTap, GitHubTapConfig
 
 
-class GitHubSource(GitHubSingerTap):
+class GitHubSource(Source):
     name = "GitHub Tap"
     discover_datasets = True
-    ingest_rules = [
-        SelectionRule("*.*"),
-        CustomInlineTransform(
-            selection=SelectionRule("*.*email*"),
-            transform=MD5Transform,
-        ),
+    ingest_rules: list[SelectionRule] = [
+        SelectionRule(pattern="*.*"),
+        # CustomInlineTransform(
+        #     selection=SelectionRule("*.*email*"),
+        #     fn=MD5Transform,
+        # ),
     ]
     config = GitHubTapConfig(
         # TODO: Add GitHub tap config

@@ -1,7 +1,9 @@
 import abc
 
+from pydantic import BaseModel
 
-class NamingConvention(metaclass=abc.ABCMeta):
+
+class NamingConvention(BaseModel, metaclass=abc.ABCMeta):
     """Naming convention base class."""
 
     name: str

@@ -1,8 +1,10 @@
 import fnmatch
 from functools import cached_property
 
+from pydantic import BaseModel
 
-class SelectionRule:
+
+class SelectionRule(BaseModel):
     """A selection rule."""
 
     pattern: str
@@ -10,12 +12,8 @@ class SelectionRule:
     class Config:
         arbitrary_types_allowed = True
 
-    def __init__(self, /, pattern: str):
-        """Initialize the selection rule."""
-        self.pattern = pattern
-
     @cached_property
-    def dataset_pattern(self) -> str:
+    def _dataset_pattern(self) -> str:
         """Return the dataset match pattern."""
         if "." in self.pattern:
             return self.pattern.split(".")[0]
@@ -23,7 +21,7 @@ class SelectionRule:
             return self.pattern
 
     @cached_property
-    def dataset_property_pattern(self) -> str:
+    def _dataset_property_pattern(self) -> str:
         """Return the dataset property match pattern."""
         if "." in self.pattern:
             return self.pattern.split(".")[:-1]

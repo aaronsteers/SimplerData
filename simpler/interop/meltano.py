@@ -7,10 +7,9 @@ from pydantic import BaseModel
 from runnow import run
 
 from simpler import yaml
+from simpler.builders import StackBuilder
 from simpler.connectors.singer import SingerTap, SingerTarget
-from simpler.flows import ReverseELFlow
-from simpler.stores import DWStorageScheme
-from simpler.tools import PythonExecutable, ToolType
+from simpler.tools import PythonExecutable, Tool, ToolType
 
 
 class MeltanoCommand(BaseModel):
@@ -75,21 +74,33 @@ class MeltanoProject(BaseModel):
         return yaml.read_yaml(self.project_dir / "meltano.yml")
 
 
-class MeltanoBuilder(BaseModel):
+class MeltanoBuilder(StackBuilder):
     """Meltano builder."""
 
-    sources: t.List[SingerTap] = []
-    storage_scheme: DWStorageScheme
-    output_flows: t.List[ReverseELFlow] = []
+    project_dir: Path = Path("./.meltano")
+
     meltano_exe = PythonExecutable(
         executable="meltano",
         pip_urls=["meltano"],
     )
 
-    def build(self, path: str = "./.meltano") -> MeltanoProject:
+    def add_meltano_plugin(self, plugin: Tool) -> None:
+        """Add a Meltano plugin."""
+        self.meltano_exe.run(
+            args=[
+                "add",
+                plugin.type,
+                plugin.name,
+            ],
+            working_dir=self.project_dir,
+        )
+
+    def compile(
+        self,
+    ) -> MeltanoProject:
         """Build a Meltano project."""
         project = MeltanoProject(
-            project_dir=Path(path),
+            project_dir=self.project_dir,
             extractors=[],
             loaders=[],
             utilities=[],
@@ -101,22 +112,8 @@ class MeltanoBuilder(BaseModel):
             working_dir=project.project_dir,
             args="init . --force",
         )
-        for source in self.sources:
-            exe.run(
-                working_dir=project.project_dir,
-                args=[
-                    "add",
-                    "extractor",
-                    source.name,
-                ],
-            )
-        for loader in [self.storage_scheme.raw.loader]:
-            exe.run(
-                working_dir=project.project_dir,
-                args=[
-                    "add",
-                    "loader",
-                    loader.name,
-                ],
-            )
+        extractors = [source.extractor for source in self.stack.sources]
+        loaders = [self.stack.as_raw_loader()]
+        for plugin in extractors + loaders:
+            self.add_meltano_plugin(plugin)
         return project

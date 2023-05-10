@@ -1,6 +1,13 @@
-from samples.gh_analytics.src.stack import GitHubStack
+from pathlib import Path
+
+from samples.gh_analytics.stack.stack import GitHubStackBuilder
 
 
-def test_compile():
-    stack = GitHubStack()
-    stack.compile
+def test_stack():
+    builder = GitHubStackBuilder()
+    builder.compile()
+
+
+def test_manifest():
+    builder = GitHubStackBuilder()
+    builder.write_manifest(Path("./manifest.json"))

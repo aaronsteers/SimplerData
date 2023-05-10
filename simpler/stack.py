@@ -2,43 +2,49 @@ import abc
 import typing as t
 from functools import cached_property
 
+from pydantic import BaseModel
+
 from simpler.calculations import AnalysisCalc
 from simpler.connectors import Extractor, Loader, Source
 from simpler.entities import DataEntity
 from simpler.flows import ELDataFlow
-from simpler.interop.meltano import MeltanoBuilder
-from simpler.naming import NamingConvention
-from simpler.stores import DWStorageScheme
+from simpler.interop.duckdb import DuckDBDWStorageScheme
+from simpler.naming import NamingConvention, SnakeCase
+from simpler.stores import StorageScheme
 from simpler.tables import SourceTable
 from simpler.transforms.sql import SQLStageTransform, SQLTransformBase
 
 
-class DataStack(metaclass=abc.ABCMeta):
+class DataStack(BaseModel, metaclass=abc.ABCMeta):
     """An automated data stack and data warehouse."""
 
+    class Config:
+        arbitrary_types_allowed = True
+
     name: str
-    naming_convention: NamingConvention
-    sql_staging_transforms: t.Iterable[SQLTransformBase]
-    sql_transforms: t.Iterable[SQLTransformBase]
+    naming_convention: NamingConvention = SnakeCase()
 
     # Data sources:
-    sources: t.Iterable[Source]
-
-    # 3 Stages of the DW: "raw", "internal", and "output"
-    storage_scheme: DWStorageScheme
+    sources: list[Source]
 
     # Reverse EL flows that should run after the DW is ready.
-    output_flows = t.Iterable[ELDataFlow]
+    output_flows: list[ELDataFlow] = []
+
+    sql_staging_transforms: list[SQLTransformBase] = []
+    sql_transforms: list[SQLTransformBase] = []
+    storage_scheme: StorageScheme = DuckDBDWStorageScheme(
+        path="./.duckdb/db.duckdb",
+    )
 
     @cached_property
-    def source_tables(self) -> t.Iterable[SourceTable]:
+    def _source_tables(self) -> t.Iterable[SourceTable]:
         """Tables to ingest from sources."""
         for source in self.sources:
             for table in source.tables:
                 yield table
 
     @cached_property
-    def entities(self) -> dict[str, DataEntity]:
+    def _entities(self) -> dict[str, DataEntity]:
         """Entities represented in the data warehouse."""
         entities = {}
         for source in self.sources:
@@ -55,7 +61,7 @@ class DataStack(metaclass=abc.ABCMeta):
             yield from entity.analyses
 
     @cached_property
-    def sql_staging_transforms(self) -> t.Iterable[SQLTransformBase]:
+    def _sql_staging_transforms(self) -> t.Iterable[SQLTransformBase]:
         """SQL staging transforms for this data stack."""
         for source_table in self.source_tables:
             yield SQLStageTransform(
@@ -64,7 +70,7 @@ class DataStack(metaclass=abc.ABCMeta):
             )
 
     @cached_property
-    def sql_transforms(self) -> t.Iterable[SQLTransformBase]:
+    def _sql_transforms(self) -> t.Iterable[SQLTransformBase]:
         """SQL transforms for this data stack."""
         for _, entity in self.entities.items():
             yield from entity.sql_transforms
@@ -73,70 +79,8 @@ class DataStack(metaclass=abc.ABCMeta):
         """Return this data stack as a loader for raw data."""
         return self.storage_scheme.raw.loader
 
-    # Build to common Open Source Tools
-    def build_meltano(self, path: str = "./.meltano") -> None:
-        """Build a Meltano project for this data stack."""
-        self.build_dbt(path=path)
-        meltano_builder = MeltanoBuilder(
-            sources=[source.extractor for source in self.sources],
-            storage_scheme=self.storage_scheme,
-        )
-        meltano_builder.build(path=path)
-
-    def build_dbt(self, path: str = "./.dbt") -> None:
-        """Build a dbt project for this data stack."""
-        pass
-
     # Reverse EL
 
     def as_extractor(self) -> Extractor:
         """Return this data stack as an extractor."""
         return Extractor(self)
-
-    # Actions
-
-    @property
-    def aspects(self) -> dict:
-        """Aspects of this data stack."""
-        return {
-            "name": self.name,
-            "naming_convention": self.naming_convention,
-            "sql_staging_transforms": self.sql_staging_transforms,
-            "sql_transforms": self.sql_transforms,
-            "sources": self.sources,
-            "storage_scheme": self.storage_scheme,
-            "output_flows": self.output_flows,
-        }
-
-    def compile(self) -> None:
-        """Compile the data stack."""
-        for entity in self.entities.values():
-            entity.compile()
-
-    def publish(self) -> None:
-        """Publish the data stack."""
-        for entity in self.entities.values():
-            entity.publish()
-
-    @classmethod
-    def init_and_build_meltano(cls) -> None:
-        """Build a Meltano project for this data stack."""
-        stack = cls()
-        stack.compile()
-        stack.build_meltano(path="./.meltano")
-
-    @classmethod
-    def init_and_compile(cls) -> None:
-        """Compile the data stack."""
-        stack = cls()
-        print(repr(stack.aspects))
-
-    @classmethod
-    def init_and_load(cls) -> None:
-        stack = cls()
-        for source in stack.sources:
-            el_flow = ELDataFlow(
-                extractor=source,
-                loader=stack.as_raw_loader(),
-            )
-            el_flow.run()

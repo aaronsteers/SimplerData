@@ -1,15 +1,16 @@
 import abc
-import typing as t
+
+from pydantic import BaseModel
 
 from simpler.connectors._base import Source
 from simpler.properties import DataProperty
 
 
-class Table(metaclass=abc.ABCMeta):
+class Table(BaseModel, metaclass=abc.ABCMeta):
     """A table."""
 
     name: str
-    properties: t.Iterable[DataProperty]
+    properties: list[DataProperty]
 
 
 class SourceTable(Table):

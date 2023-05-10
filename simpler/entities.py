@@ -1,5 +1,4 @@
 import abc
-import typing as t
 
 from simpler.properties import DataProperty
 
@@ -8,7 +7,7 @@ class DataEntity(metaclass=abc.ABCMeta):
     """A data entity."""
 
     name: str
-    properties: t.Iterable[DataProperty]
+    properties: list[DataProperty]
 
     def merge(self, /, other: "DataEntity") -> None:
         """Merge this entity with another."""

@@ -2,7 +2,7 @@ from simpler.stores._base import (
     DatastoreBase,
     DWStorageScheme,
     SQLEngine,
-    StorageSchemeBase,
+    StorageScheme,
 )
 
-__all__ = ["SQLEngine", "DatastoreBase", "StorageSchemeBase", "DWStorageScheme"]
+__all__ = ["SQLEngine", "DatastoreBase", "StorageScheme", "DWStorageScheme"]

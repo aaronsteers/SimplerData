@@ -1,5 +1,4 @@
 import abc
-import typing as t
 
 from pydantic import BaseModel
 
@@ -34,5 +33,5 @@ class Source(BaseModel, metaclass=abc.ABCMeta):
     name: str
     discover_datasets: bool = True
     ingest_rules: list[SelectionRule]
-    entities: t.Iterable[DataEntity] = []
+    entities: list[DataEntity] = []
     extractor: Extractor | None = None

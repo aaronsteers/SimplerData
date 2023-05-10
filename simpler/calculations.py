@@ -1,9 +1,9 @@
-from enum import Enum, auto
+from enum import auto, IntEnum
 
 from simpler.properties import DataProperty
 
 
-class AggregationMethodEnum(Enum):
+class AggregationMethodEnum(IntEnum):
     FIRST = auto()
     LAST = auto()
     SUM = auto()

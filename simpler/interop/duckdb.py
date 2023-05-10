@@ -1,6 +1,7 @@
 import typing as t  # noqa
 
-from simpler.connectors.singer import SingerConfig, SingerTarget, PythonExecutable
+from simpler.connectors.singer import SingerConfig, SingerTarget
+from simpler.tools import PythonExecutable
 from simpler.stores import DatastoreBase, DWStorageScheme
 
 

@@ -2,7 +2,8 @@ from simpler import (
     SelectionRule,
 )
 from simpler.connectors import Source
-from simpler.connectors.singer import PythonExecutable, SingerConfig, SingerTap
+from simpler.connectors.singer import SingerConfig, SingerTap
+from simpler.tools import PythonExecutable
 
 
 class JaffleShopTapConfig(SingerConfig):
@@ -14,10 +15,11 @@ class JaffleShopTapConfig(SingerConfig):
 class JaffleShopSource(Source):
     """Jaffle Shop data source."""
 
-    name = "Jaffle Shop"
+    alias = "Jaffle Shop"
+    name = "tap-jaffle-shop"
     discover_datasets = True
     ingest_rules: list[SelectionRule] = [
-        SelectionRule("*.*"),
+        SelectionRule(pattern="*.*"),
     ]
     config = JaffleShopTapConfig(
         years=1,

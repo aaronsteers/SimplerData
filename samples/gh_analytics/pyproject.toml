@@ -25,6 +25,6 @@ build-backend = "poetry_dynamic_versioning.backend"
 
 # Define a script to run the app
 [tool.poetry.scripts]
-load = "stack.stack:GitHubStack.init_and_load"
-compile = "stack.stack:GitHubStack.init_and_compile"
-build_meltano = "stack.stack:GitHubStack.init_and_build_meltano"
+compile = "stack.stack:GitHubStackBuilder.init_and_compile"
+el = "stack.stack:GitHubStackBuilder.init_and_el"
+elt = "stack.stack:GitHubStackBuilder.init_and_elt"

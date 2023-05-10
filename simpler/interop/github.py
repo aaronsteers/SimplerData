@@ -1,4 +1,5 @@
-from simpler.connectors.singer import PythonExecutable, SingerConfig, SingerTap
+from simpler.connectors.singer import SingerConfig, SingerTap
+from simpler.tools import PythonExecutable
 
 
 class GitHubTapConfig(SingerConfig):
